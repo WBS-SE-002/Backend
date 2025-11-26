@@ -1,6 +1,7 @@
 using BlogApi.Dtos.Posts;
 using BlogApi.Dtos.Users;
 using BlogApi.Services;
+using BlogApi.Filters;
 
 namespace BlogApi.Endpoints;
 
@@ -26,7 +27,7 @@ public static class UserEndpoints
 
       var location = $"{context.Request.Scheme}://{context.Request.Host}/users/{user.Id}";
       return Results.Created(location, userDto);
-    });
+    }).WithValidation<CreateUserDto>();
 
     // GET users/{id:guid}
     group.MapGet("/{id:guid}", async (Guid id, IUserService userService) =>
@@ -49,7 +50,7 @@ public static class UserEndpoints
 
       var userDto = new UserResponseDto(user.Id, user.Name, user.Email, user.CreatedAt);
       return Results.Ok(userDto);
-    });
+    }).WithValidation<UpdateUserDto>();
 
     // DELETE /users/{id:guid}
     group.MapDelete("/{id:guid}", async (Guid id, IUserService userService, IPostService postService) =>

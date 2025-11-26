@@ -1,3 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BlogApi.Dtos.Users;
 
-public record CreateUserDto(string Name, string Email);
+public record CreateUserDto(
+ [property: Required]
+ [property: StringLength(255, MinimumLength = 1)]
+  string Name,
+
+  [property: Required]
+  [property: EmailAddress]
+  string Email
+  );

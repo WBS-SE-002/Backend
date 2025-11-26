@@ -1,4 +1,5 @@
 using BlogApi.Dtos.Posts;
+using BlogApi.Filters;
 using BlogApi.Services;
 
 namespace BlogApi.Endpoints;
@@ -32,7 +33,7 @@ public static class PostEndpoints
       {
         return Results.BadRequest("User not found");
       }
-    });
+    }).WithValidation<CreatePostDto>();
 
     // GET /posts/{id:guid}
     group.MapGet("/{id:guid}", async (Guid id, IPostService postService) =>
@@ -54,7 +55,7 @@ public static class PostEndpoints
 
       var postDto = new PostResponseDto(post.Id, post.UserId, post.Title, post.Content, post.PublishedAt);
       return Results.Ok(postDto);
-    });
+    }).WithValidation<UpdatePostDto>();
 
     // DELETE /posts/{id:guid}
     group.MapDelete("/{id:guid}", async (Guid id, IPostService postService) =>
