@@ -11,9 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<DbSeeder>();
 builder.Services.AddScoped<ITransactionService, TransactionServiceEf>();
 builder.Services.AddScoped<IReportService, ReportServiceEf>();
-builder.Services.AddScoped<DbSeeder>();
 // builder.Services.AddSingleton<ITransactionService, TransactionServiceMock>();
 // builder.Services.AddSingleton<IReportService, ReportServiceMock>();
 builder.Services.AddOpenApi();

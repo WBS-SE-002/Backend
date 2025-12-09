@@ -6,14 +6,9 @@ using BudgetApi.Dtos.Transactions;
 
 namespace BudgetApi.Application.Services;
 
-public class TransactionServiceEf : ITransactionService
+public class TransactionServiceEf(ApplicationDbContext db) : ITransactionService
 {
-  private readonly ApplicationDbContext _db;
-
-  public TransactionServiceEf(ApplicationDbContext db)
-  {
-    _db = db;
-  }
+  private readonly ApplicationDbContext _db = db;
 
   public async Task<Transaction?> GetAsync(Guid id)
   {
