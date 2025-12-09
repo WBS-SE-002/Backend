@@ -20,6 +20,41 @@ public class TransactionServiceTests
   [Fact]
   public async Task CreateAsync_ValidUser_CreatesTransactionSuccessfully()
   {
+    // arrange
+    await using var db = CreateInMemoryDb();
 
+    var transactionService = new TransactionServiceEf(db);
+
+    var user = new User
+    {
+      Id = Guid.NewGuid(),
+      Name = "Alice Johnson",
+      Email = "alice@example.com",
+      UserName = "alice@example.com"
+    };
+    db.Users.Add(user);
+    await db.SaveChangesAsync();
+
+    var description = "My first income.";
+    var amount = 100.00m;
+    var date = DateOnly.Parse("2025-12-01");
+
+    var createDto = new CreateTransactionDto(TransactionType.Income, description, amount, date);
+
+    // act
+    var transaction = await transactionService.CreateAsync(user.Id, createDto);
+
+    // Assert - Verify the results
+    Assert.NotEqual(Guid.Empty, transaction.Id);
+    Assert.Equal(user.Id, transaction.UserId);
+    Assert.Equal(TransactionType.Income, transaction.Type);
+    Assert.Equal(description, transaction.Description);
+    Assert.Equal(amount, transaction.Amount);
+    Assert.Equal(date, transaction.Date);
+
+    // Verify it was actually saved to the database
+    var savedTransaction = await db.Transactions.FindAsync(transaction.Id);
+    Assert.NotNull(savedTransaction);
+    Assert.Equal(transaction.Description, savedTransaction!.Description);
   }
 }

@@ -16,8 +16,11 @@ using BudgetApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+if (builder.Environment.EnvironmentName != "Testing")
+{
+  builder.Services.AddDbContext<ApplicationDbContext>(options =>
+      options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 builder.Services.AddIdentityCore<User>()
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
