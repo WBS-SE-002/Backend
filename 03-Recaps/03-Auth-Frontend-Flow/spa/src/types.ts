@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from 'react';
 declare global {
 	type Post = {
 		id: string;
@@ -19,7 +20,20 @@ declare global {
 	type AuthContextType = {
 		signedIn: boolean;
 		user: User | null;
-		handleSignIn: () => void;
-		handleSignOut: () => void;
+		handleSignIn: ({ email, password }: LoginData) => Promise<void>;
+		handleSignOut: () => Promise<void>;
+		handleRegister: (formState: RegisterFormState) => Promise<void>;
 	};
+
+	type LoginData = { email: string; password: string };
+
+	type RegisterFormState = {
+		firstName: string;
+		lastName: string;
+		email: string;
+		password: string;
+		confirmPassword: string;
+	};
+
+	type SetPosts = Dispatch<SetStateAction<Post[]>>;
 }

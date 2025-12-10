@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-import cookieParser from 'cookie-parser';
+// import cookieParser from 'cookie-parser';
 import '#db';
 import { errorHandler } from '#middlewares';
 import { postsRouter } from '#routes';

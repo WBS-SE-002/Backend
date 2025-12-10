@@ -1,7 +1,14 @@
-import { Outlet /* Navigate*/ } from 'react-router';
+import { Outlet, Navigate } from 'react-router';
+import { useAuth } from '@/context';
 
 const ProtectedLayout = () => {
-	return <Outlet />;
+	const { signedIn } = useAuth();
+
+	if (signedIn) {
+		return <Outlet />;
+	} else {
+		return <Navigate to='/login' />;
+	}
 };
 
 export default ProtectedLayout;

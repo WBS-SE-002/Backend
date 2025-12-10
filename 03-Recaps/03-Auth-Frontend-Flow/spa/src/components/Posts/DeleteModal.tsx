@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { deletePost } from '@/data';
 
 type DeleteModalProps = {
 	id: string;
-	// setPosts: SetPosts;
+	setPosts: SetPosts;
 };
 
-const DeleteModal = ({ id /*setPosts*/ }: DeleteModalProps) => {
+const DeleteModal = ({ id, setPosts }: DeleteModalProps) => {
 	const [value, setValue] = useState('');
 	const [isValid, setIsValid] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			console.log('Delete!');
+			await deletePost(id);
+			setPosts((prev) => prev.filter((post) => post.id !== id));
 		} catch (error) {
 			const message = (error as { message: string }).message;
 			toast.error(message);

@@ -4,6 +4,8 @@ if (!API_URL)
 	throw new Error('API URL is required, are you missing a .env file?');
 const baseURL: string = `${API_URL}/posts`;
 
+type PostData = Omit<Post, 'id'>;
+
 export const getPosts = async (): Promise<Post[]> => {
 	const res = await fetch(baseURL);
 	if (!res.ok) {
@@ -31,10 +33,12 @@ export const getSinglePost = async (id: string): Promise<Post> => {
 };
 
 export const createPost = async (formData: Omit<Post, 'id'>): Promise<Post> => {
+	const accessToken = localStorage.getItem('accessToken');
 	const res = await fetch(baseURL, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${accessToken}`
 		},
 		body: JSON.stringify(formData)
 	});
@@ -46,5 +50,49 @@ export const createPost = async (formData: Omit<Post, 'id'>): Promise<Post> => {
 		throw new Error(errorData.error);
 	}
 	const data: Post = await res.json();
+	return data;
+};
+
+export const updatePost = async (
+	id: string,
+	formData: PostData
+): Promise<Post> => {
+	const accessToken = localStorage.getItem('accessToken');
+	const res = await fetch(`${baseURL}/${id}`, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${accessToken}`
+		},
+		body: JSON.stringify(formData)
+	});
+	if (!res.ok) {
+		const errorData = await res.json();
+		if (!errorData.message) {
+			throw new Error('An error occurred while updating the post');
+		}
+		throw new Error(errorData.message);
+	}
+	const data = await res.json();
+	return data;
+};
+
+export const deletePost = async (id: string) => {
+	const accessToken = localStorage.getItem('accessToken');
+	const res = await fetch(`${baseURL}/${id}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${accessToken}`
+		}
+	});
+	if (!res.ok) {
+		const errorData = await res.json();
+		if (!errorData.message) {
+			throw new Error('An error occurred while updating the post');
+		}
+		throw new Error(errorData.message);
+	}
+	const data = await res.json();
 	return data;
 };

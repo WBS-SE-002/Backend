@@ -1,13 +1,25 @@
 import { Link } from 'react-router';
+import { useAuth } from '@/context';
+import { EditModal, DeleteModal } from '@/components';
 
 type PostCardProps = {
 	id: string;
 	content: string;
 	image: string;
 	title: string;
+	author: string;
+	setPosts: SetPosts;
 };
 
-const PostCard = ({ id, content, image, title }: PostCardProps) => {
+const PostCard = ({
+	id,
+	content,
+	image,
+	title,
+	author,
+	setPosts
+}: PostCardProps) => {
+	const { user } = useAuth();
 	return (
 		<div className='card bg-base-100 shadow-xl'>
 			<figure className='bg-white h-48'>
@@ -19,6 +31,40 @@ const PostCard = ({ id, content, image, title }: PostCardProps) => {
 				<Link to={`/post/${id}`} className='btn btn-primary mt-4'>
 					Read More
 				</Link>
+				{user?.id === author && (
+					<div className='card-actions justify-center gap-6'>
+						<button
+							onClick={() =>
+								document
+									.querySelector<HTMLDialogElement>(`#edit-modal-${id}`)!
+									.showModal()
+							}
+							className='btn btn-success'
+						>
+							Edit
+						</button>
+						<EditModal
+							id={id}
+							image={image}
+							title={title}
+							content={content}
+							author={author}
+							setPosts={setPosts}
+						/>
+
+						<button
+							onClick={() =>
+								document
+									.querySelector<HTMLDialogElement>(`#delete-modal-${id}`)!
+									.showModal()
+							}
+							className='btn btn-error'
+						>
+							Delete
+						</button>
+						<DeleteModal id={id} setPosts={setPosts} />
+					</div>
+				)}
 			</div>
 		</div>
 	);
