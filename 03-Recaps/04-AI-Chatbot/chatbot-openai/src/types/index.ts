@@ -17,3 +17,4 @@ export type Message = {
 export type ChatRef = RefObject<HTMLDivElement | null>;
 
 export type SetMessages = Dispatch<SetStateAction<Message[]>>;
+export type SetChatId = Dispatch<SetStateAction<string | null>>;

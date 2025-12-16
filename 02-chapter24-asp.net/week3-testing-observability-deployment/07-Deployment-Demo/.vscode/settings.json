@@ -1,0 +1,5 @@
+{
+	"appService.preDeployTask": "publish-release",
+	"appService.deploySubpath": "bin\\Release\\net10.0\\publish",
+	"appService.defaultWebAppToDeploy": "/subscriptions/d829b7ae-a789-4e3a-b88c-56cf2f25f387/resourceGroups/wbs-lectures/providers/Microsoft.Web/sites/budgetapi-app"
+}

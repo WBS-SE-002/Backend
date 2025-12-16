@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 
+// create a schema for the message subdocument
 const messageSchema = new Schema({
   role: {
     type: String,

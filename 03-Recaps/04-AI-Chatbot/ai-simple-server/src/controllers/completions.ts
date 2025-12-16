@@ -10,9 +10,10 @@ type IncomingPrompt = z.infer<typeof promptBodySchema>;
 type ResponseCompletion = { completion: string };
 type ResponseWithId = ResponseCompletion & { chatId: string };
 
-// declared outside of function, to persist across API calls. Will reset if server stops/restarts
+// declared outside of function, to persist across API calls.
+// Will reset if server stops/restarts
 const messages: ChatCompletionMessageParam[] = [
-  { role: 'developer', content: 'You are a helpful assistant' }
+  { role: 'developer', content: 'You are Batman after becoming a Senior Software Engineer.' }
 ];
 
 export const createSimpleChatCompletion: RequestHandler<
@@ -50,7 +51,10 @@ export const createChatCompletion: RequestHandler<unknown, ResponseWithId, Incom
   let currentChat = await Chat.findById(chatId);
   // if no chat is found, create a chat with system prompt
   if (!currentChat) {
-    const systemPrompt = { role: 'developer', content: 'You are a helpful assistant' };
+    const systemPrompt = {
+      role: 'developer',
+      content: 'You are Gollum after becoming a Senior Software Engineer'
+    };
     currentChat = await Chat.create({ history: [systemPrompt] });
   }
 
@@ -65,11 +69,18 @@ export const createChatCompletion: RequestHandler<unknown, ResponseWithId, Incom
     baseURL: process.env?.AI_URL
   });
 
+  const msgHistory = currentChat.history.map(msg => {
+    const { role, content } = msg;
+    return { role, content };
+  });
+
+  // console.log(msgHistory);
+
   const completion = await client.chat.completions.create({
     model: process.env.AI_MODEL || 'gemini-2.0-flash',
     // stringifying and then parsing is like using .lean(). It will turn currentChat into a plain JavaScript Object
     // We don't use .lean(), because we later need to .save()
-    messages: JSON.parse(JSON.stringify(currentChat.history))
+    messages: JSON.parse(JSON.stringify(msgHistory))
   });
 
   const completionText = completion.choices[0]?.message.content || 'No completion generated';

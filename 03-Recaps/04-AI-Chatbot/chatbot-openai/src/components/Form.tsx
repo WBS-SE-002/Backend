@@ -4,13 +4,15 @@ import {
 	type FormEventHandler
 } from 'react';
 import { toast } from 'react-toastify';
-import type { Message, SetMessages } from '../types';
+import type { Message, SetMessages, SetChatId } from '../types';
+import { createChat } from '../data/ai';
 
 type FormProps = {
 	setMessages: SetMessages;
+	setChatId: SetChatId;
 };
 
-const Form = ({ setMessages }: FormProps) => {
+const Form = ({ setMessages, setChatId }: FormProps) => {
 	const [prompt, setPrompt] = useState('');
 	const [loading, setLoading] = useState(false);
 
@@ -32,6 +34,18 @@ const Form = ({ setMessages }: FormProps) => {
 				_id: crypto.randomUUID()
 			};
 			setMessages((prev) => [...prev, userMsg]);
+
+			const response = await createChat({ prompt });
+
+			const asstMsg: Message = {
+				_id: crypto.randomUUID(),
+				content: response.completion,
+				role: 'assistant'
+			};
+
+			setMessages((prev) => [...prev, asstMsg]);
+			localStorage.setItem('chatId', response.chatId);
+			setChatId(response.chatId);
 
 			setPrompt('');
 		} catch (error) {
