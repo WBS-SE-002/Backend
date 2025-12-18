@@ -22,10 +22,12 @@ type HistoryRes = {
 };
 
 const createChat = async (body: ChatBody): Promise<ChatRes> => {
-	const response = await fetch(`${baseURL}/chat`, {
+	const accessToken = localStorage.getItem('accessToken');
+	const response = await fetch(`${baseURL}/agent`, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${accessToken}`
 		},
 		body: JSON.stringify(body)
 	});

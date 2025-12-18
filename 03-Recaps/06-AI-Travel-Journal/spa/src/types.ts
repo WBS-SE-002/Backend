@@ -37,7 +37,13 @@ declare global {
 
 	type SetPosts = Dispatch<SetStateAction<Post[]>>;
 
-	type MsgRoles = 'assistant' | 'user';
+	type MsgRoles =
+		| 'assistant'
+		| 'developer'
+		| 'function'
+		| 'system'
+		| 'tool'
+		| 'user';
 
 	type Message = {
 		role: MsgRoles;
@@ -49,4 +55,5 @@ declare global {
 
 	type SetMessages = Dispatch<SetStateAction<Message[]>>;
 	type SetChatId = Dispatch<SetStateAction<string | null>>;
+	type SetLoading = Dispatch<SetStateAction<boolean>>;
 }

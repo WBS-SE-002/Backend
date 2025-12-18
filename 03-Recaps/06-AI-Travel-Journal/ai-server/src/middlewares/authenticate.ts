@@ -11,8 +11,9 @@ const authenticate: RequestHandler = (req, _res, next) => {
   // const { accessToken } = req.cookies;
   const authHeader = req.header('authorization');
   const accessToken = authHeader && authHeader.split(' ')[1];
+  console.log(typeof accessToken);
 
-  if (!accessToken) return next();
+  if (!accessToken || accessToken === 'null') return next();
   try {
     const decoded = jwt.verify(accessToken, secret) as jwt.JwtPayload;
     // console.log(decoded)

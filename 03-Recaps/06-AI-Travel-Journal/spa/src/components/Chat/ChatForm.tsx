@@ -10,11 +10,12 @@ import { createChat } from '@/data';
 type FormProps = {
 	setMessages: SetMessages;
 	setChatId: SetChatId;
+	loading: boolean;
+	setLoading: SetLoading;
 };
 
-const Form = ({ setMessages, setChatId }: FormProps) => {
+const Form = ({ setMessages, setChatId, loading, setLoading }: FormProps) => {
 	const [prompt, setPrompt] = useState('');
-	const [loading, setLoading] = useState(false);
 
 	const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (e) =>
 		setPrompt(e.target.value);

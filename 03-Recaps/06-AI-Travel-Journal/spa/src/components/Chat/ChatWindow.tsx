@@ -11,6 +11,7 @@ function ChatWindow() {
 	const [chatId, setChatId] = useState<string | null>(
 		localStorage.getItem('chatId')
 	);
+	const [loading, setLoading] = useState(false);
 
 	// scroll to bottom of chat when new message is added
 	useEffect(() => {
@@ -22,7 +23,7 @@ function ChatWindow() {
 		const getAndSetChatHistory = async () => {
 			try {
 				// get the chat history with our function, store it in a variable
-				const { history } = await getChatHistory(chatId);
+				const { history } = await getChatHistory(chatId!);
 
 				// update our messages state to the history
 				setMessages(history);
@@ -39,11 +40,12 @@ function ChatWindow() {
 
 	return (
 		<div className='max-h-[75vh] max-w-[600px] flex flex-col bg-slate-600 rounded-lg'>
-			<Chat chatRef={chatRef} messages={messages} />
+			<Chat chatRef={chatRef} messages={messages} loading={loading} />
 			<ChatForm
 				setMessages={setMessages}
-				chatId={chatId}
 				setChatId={setChatId}
+				loading={loading}
+				setLoading={setLoading}
 			/>
 			<ToastContainer autoClose={1500} theme='colored' />
 		</div>
